@@ -4,6 +4,9 @@ import re
 import turtle
 import sys
 
+TRAZO = 150
+
+
 def replace(substitution):
     return lambda match: substitution[match.group(0)]
 
@@ -14,7 +17,7 @@ def dragon_curve(n:int=None):
     del sys.argv[0]
     args = ' '.join([str(s) for s in sys.argv])
     
-    m = re.fullmatch(r'(-i)\s(\d)', args)
+    m = re.fullmatch(r'(-i)\s(\d{1,3})', args)
     
     if not m:
         print(f'No se especifico ningun parametro o esta mal especificado.\nArgs recibidos: {args}')
@@ -28,19 +31,30 @@ def dragon_curve(n:int=None):
 
     for x in range(0, n):  
         cadena = re.sub(no_terminales, replace(reglas_prod), cadena)
+
+    draw_dragon_curve(cadena, n)
     
     return cadena
 
 
-def draw_dragon_curve(cadena):
+def calc_scale(n):
+    return TRAZO/n
+
+
+def draw_dragon_curve(cadena, n):
+    
+    distance = calc_scale(n) if (n>2) else TRAZO
     window = turtle.Screen()
-    window.setup(width=800, height=800)
+    window.setup(width=1024, height=768)
     window.title('Dragon Curve')
     t = turtle.Turtle()
+
     t.up()
-    t.goto((-300, 300))
-    t.down()    
+    t.goto((-250, 70))
+    t.down()
     t.speed(0)
+    t.rt(90)
+    
 
     regex = re.compile('[XY]')
     cadena = re.sub(regex, '', cadena)
@@ -48,7 +62,7 @@ def draw_dragon_curve(cadena):
     for c in cadena:
         
         if(c == 'F'):
-            t.forward(10)
+            t.backward(distance)
 
         if(c == '+'):
             t.rt(90)
@@ -59,4 +73,4 @@ def draw_dragon_curve(cadena):
     turtle.done()
     
 
-dragon_curve(3)
+dragon_curve()
