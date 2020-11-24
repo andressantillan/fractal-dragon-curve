@@ -1,23 +1,36 @@
-#TODO Solucionar el factor de escala iteracion 0 a un numero fijo, cada dos iteraciones el numero de factor / 2, calcular antes de dibujar
+#TODO Ajustar la resolucion segun el trazo
+#TODO 
+# x = TRAZO
+# x = x/(sqrt(2))^i i = iteraciones
 
-import re
-import turtle
-import sys
+import re, turtle, sys, math
 
-TRAZO = 150
+TRAZO = 300
 
 
 def replace(substitution):
+    """
+        Funcion que matchea segun una key y un value.\n
+        Recibe un diccionario, donde la key del dict es el caracter que hay que matchear,\n
+        y el value el valor a reemplazar en caso de match.
+    """
     return lambda match: substitution[match.group(0)]
 
+
+
 def dragon_curve(n:int=None):
-    
-    #TODO ver el parseo con groups en python
+    """
+        Funcion que genera la gramatica n del fractal Dragon Curve.\n
+        Tambien lo dibuja con turtle...
+        Argumentos:
+        n --- Cantidad de iteraciones de la gramatica
+    """
 
     del sys.argv[0]
     args = ' '.join([str(s) for s in sys.argv])
     
-    m = re.fullmatch(r'(-i)\s(\d{1,3})', args)
+    #Chequeo el arg de iteraciones con una regex
+    m = re.fullmatch(r'(-i)\s(\d{1,})', args)
     
     if not m:
         print(f'No se especifico ningun parametro o esta mal especificado.\nArgs recibidos: {args}')
@@ -38,23 +51,24 @@ def dragon_curve(n:int=None):
 
 
 def calc_scale(n):
-    return TRAZO/n
+    return TRAZO/pow(math.sqrt(2), n)
 
+def config_window(window, turtle, x):
+    window.setup(width=1024, height=768)
+    window.title('Dragon Curve')
+    turtle.up()
+    turtle.goto((x, 0))
+    turtle.down()
+    turtle.speed(0)
+    turtle.rt(90)
 
 def draw_dragon_curve(cadena, n):
     
     distance = calc_scale(n) if (n>2) else TRAZO
-    window = turtle.Screen()
-    window.setup(width=1024, height=768)
-    window.title('Dragon Curve')
+    x =  200 if(n >= 15) else -150
+    w = turtle.Screen()
     t = turtle.Turtle()
-
-    t.up()
-    t.goto((-250, 70))
-    t.down()
-    t.speed(0)
-    t.rt(90)
-    
+    config_window(w, t, x)
 
     regex = re.compile('[XY]')
     cadena = re.sub(regex, '', cadena)
