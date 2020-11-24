@@ -1,8 +1,3 @@
-#TODO Ajustar la resolucion segun el trazo
-#TODO 
-# x = TRAZO
-# x = x/(sqrt(2))^i i = iteraciones
-
 import re, turtle, sys, math
 
 TRAZO = 300
